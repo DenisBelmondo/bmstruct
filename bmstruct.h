@@ -3,6 +3,11 @@
 
 #include <stddef.h>
 
+enum bm_boolean {
+    BM_FALSE,
+    BM_TRUE
+};
+
 enum bm_numeric_type_tag {
     BM_TAG_INTEGER,
     BM_TAG_DECIMAL
@@ -13,44 +18,56 @@ enum bm_sign_tag {
     BM_TAG_UNSIGNED
 };
 
-/* unnecessary but it might read better? */
-enum bm_size_tag {
-    BM_SIZE_8 = 8,
-    BM_SIZE_16 = 16,
-    BM_SIZE_32 = 32,
-    BM_SIZE_64 = 64,
-    BM_SIZE_128 = 128
-};
-
 #define BM_TAGGED_UNION_FIELDS\
-    enum bm_numeric_type_tag numeric_type;\
-    enum bm_sign_tag sign;\
-    int size;
+    unsigned char size_in_bytes;\
+    unsigned char numeric_type;\
+    unsigned char is_signed;\
+    unsigned char is_null;\
 
 #define BM_TAGGED_UNION_PAYLOAD_FIELDS\
-    char as_car;\
+    char as_char;\
+    char *as_char_pointer;\
     unsigned char as_unsigned_char;\
+    unsigned char *as_unsigned_char_pointer;\
     short as_short;\
+    short *as_short_pointer;\
     unsigned short as_unsigned_short;\
+    unsigned short *as_unsigned_short_pointer;\
     int as_int;\
+    int *as_int_pointer;\
     unsigned int as_unsigned_int;\
+    unsigned int *as_unsigned_int_pointer;\
     long as_long;\
-    unsigned long as_unsigned_long;
+    long *as_long_pointer;\
+    unsigned long as_unsigned_long;\
+    unsigned long *as_unsigned_long_pointer;\
+    void *as_void_pointer;
 
-struct bm_tagged_union {
+struct bm_tagged_c_type {
     BM_TAGGED_UNION_FIELDS
     union { BM_TAGGED_UNION_PAYLOAD_FIELDS } payload;
 };
 
-struct bm_tagged_union_64 {
-    BM_TAGGED_UNION_FIELDS
-
-    union {
+#if defined(__STDC__) && (__STDC_VERSION__ >= 199901L)
+    struct bm_tagged_64_bit_type {
         BM_TAGGED_UNION_FIELDS
-        long long as_long_long;
-        unsigned long long as_unsigned_long_long;
-    } payload;
-};
+
+        union {
+            long long as_long_long;
+            long long *as_long_long_pointer;
+            unsigned long long as_unsigned_long_long;
+            unsigned long long *as_unsigned_long_long_pointer;
+        } payload;
+    };
+#endif
+
+#define BM_INIT_TAGGED_INT(OUT_TAGGED_UNION, VALUE) do {\
+    (OUT_TAGGED_UNION)->size_in_bytes = sizeof (int);\
+    (OUT_TAGGED_UNION)->numeric_type = BM_TAG_INTEGER;\
+    (OUT_TAGGED_UNION)->is_signed = BM_TRUE;\
+    (OUT_TAGGED_UNION)->is_null = BM_FALSE;\
+    (OUT_TAGGED_UNION)->payload.as_int = VALUE;\
+} while (0)
 
 #define FMT_CHAR "%c"
 #define FMT_INT "%d"
@@ -88,7 +105,5 @@ struct bm_tagged_union_64 {
     ((T_HEADER *)DEST)[0] = header_value;\
     OUT_PAYLOAD = (T *)((unsigned char *)(DEST) + sizeof (T_HEADER));\
 } while (0)
-
-#define BM_WITH(EXPR, AFTER, BODY) do { EXPR ; BODY ; AFTER ; } while (0)
 
 #endif /* BMSTRUCT_H */

@@ -7,3 +7,4 @@ CFLAGS ?= -std=c89\
 		  -Wextra
 
 tests: test.c
+	$(CC) $(CFLAGS) -o $@ $^
