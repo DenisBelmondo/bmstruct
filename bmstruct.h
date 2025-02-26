@@ -69,33 +69,6 @@ struct bm_tagged_c_type {
     (OUT_TAGGED_UNION)->payload.as_int = VALUE;\
 } while (0)
 
-#define FMT_CHAR "%c"
-#define FMT_INT "%d"
-#define FMT_eFLOAT "%e"
-#define FMT_EFLOAT "%E"
-#define FMT_FLOAT "%f"
-#define FMT_GFLOAT "%G"
-#define FMT_gFLOAT "%g"
-#define FMT_REAL "%G"
-#define FMT_real "%g"
-#define FMT_SIGNED "%i"
-#define FMT_LONG "%ld"
-#define FMT_SLONG "%li"
-#define FMT_DOUBLE "%lf"
-#define FMT_LDOUBLE "%Lf"
-#define FMT_LLONG "%lli"
-#define FMT_ULLONG "%lld"
-#define FMT_OCTAL "%o"
-#define FMT_POINTER "%p"
-#define FMT_PTR "%p"
-#define FMT_STR "%s"
-#define FMT_STRING "%s"
-#define FMT_UINT "%u"
-#define FMT_hex "%x"
-#define FMT_HEX "%X"
-#define FMT_NOTHING "%n"
-#define FMT_SIZE_T "%zu"
-
 #define BM_STATIC_ARRAY_SIZE(ARRAY) (sizeof (ARRAY) / sizeof (ARRAY[0]))
 #define BM_CAST(T, EXPR) ((T)EXPR)
 #define BM_CALCULATE_TOTAL_FAT_SIZE(T_HEADER, T, T_COUNT) (sizeof (T_HEADER) + (sizeof (T) * T_COUNT))

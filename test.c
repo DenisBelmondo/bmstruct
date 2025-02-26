@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "bmfmt.h"
 #include "bmstruct.h"
 
 /* test lhs expansion */
